@@ -102,23 +102,23 @@ head -n 5 $files_list
 echo
 
 echo "считаем размер данных для бэкапа..."
-postfix="байт"
+postfix_all_summ_files="байт"
 if [ 1024 -lt $all_summ_files ]
 then
   all_summ_files=`expr $all_summ_files / 1024`
-  postfix="Кбайт"
+  postfix_all_summ_files="Кбайт"
 fi
 if [ 1024 -lt $all_summ_files ]
 then
   all_summ_files=`expr $all_summ_files / 1024`
-  postfix="Мбайт"
+  postfix_all_summ_files="Мбайт"
 fi
 if [ 1024 -lt $all_summ_files ]
 then
   all_summ_files=`expr $all_summ_files / 1024`
-  postfix="Гбайт"
+  postfix_all_summ_files="Гбайт"
 fi
-echo "Размер всех файлов на запись: $all_summ_files $postfix"
+echo "Размер всех файлов на запись: $all_summ_files $postfix_all_summ_files"
 echo "Продолжаем? (нажмите любую клавишу)..."
 read key
 
@@ -162,7 +162,7 @@ if [ ! 0 -eq $? ]
 then
   echo "Ошибка выполнения команды тестирования:"
   echo "growisofs $session_param $cdrom_dev -R -J -joliet-long -volid $time_stamp $cache_dir"
-  echo "Может быть на диске нет свободного места для записи $all_summ_files $postfix?"
+  echo "Может быть на диске нет свободного места для записи $all_summ_files $postfix_all_summ_files?"
   exit 1
 else
   echo "успешно прошли тестирование записи данных на диск. Приступаем к реальной записи:"
