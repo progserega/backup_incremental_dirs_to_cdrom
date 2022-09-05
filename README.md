@@ -1,6 +1,8 @@
 # backup_incremental_dirs_to_cdrom
 Find new files in dirs from list and write (append) it (with dirs tree) to cd/dvd/bd/mdisc as new session.
 
+Скрипт бэкапит новые файлы из указанных в списке директорий в виде новой сессии на cd/dvd/bd/mdisc с сохранением иерархии директорий.
+
 1. Скрипт берёт список директорий из /home/progserega/backup_dirs_to_cdrom.list 
 2. Для каждой директории из списка:
 2. Смотрит в корне каждой директории файл backup_last_cd_snaphot.stat, берёт его время изменения
