@@ -102,37 +102,25 @@ head -n 5 $files_list
 echo
 
 echo "считаем размер данных для бэкапа..."
-postfix="байт"
+postfix_all_summ_files="байт"
 if [ 1024 -lt $all_summ_files ]
 then
   all_summ_files=`expr $all_summ_files / 1024`
-  postfix="Кбайт"
+  postfix_all_summ_files="Кбайт"
 fi
 if [ 1024 -lt $all_summ_files ]
 then
   all_summ_files=`expr $all_summ_files / 1024`
-  postfix="Мбайт"
+  postfix_all_summ_files="Мбайт"
 fi
 if [ 1024 -lt $all_summ_files ]
 then
   all_summ_files=`expr $all_summ_files / 1024`
-  postfix="Гбайт"
+  postfix_all_summ_files="Гбайт"
 fi
-echo "Размер всех файлов на запись: $all_summ_files $postfix"
+echo "Размер всех файлов на запись: $all_summ_files $postfix_all_summ_files"
 echo "Продолжаем? (нажмите любую клавишу)..."
 read key
-
-echo "копируем эти файлы в $cache_dir для последующей записи на cd/dvd/bd"
-
-while read file_item
-do
-  # получаем каталог:
-  dir_path="`echo $file_item|sed 's/\(.*\)\/.*$/\1/'`"
-  result_dir_path="${cache_dir}/${dir_path}"
-  mkdir -p "$result_dir_path"
-  # копируем файл в этот каталог:
-  cp -a "${file_item}" "${result_dir_path}/" 
-done < $files_list
 
 # запись:
 echo "проверяем наличие мультисессии:"
@@ -157,12 +145,12 @@ else
 fi
 
 echo "пробуем в режиме тестирования (-dry-run - без записи):"
-growisofs -dry-run $session_param $cdrom_dev -R -J -joliet-long -volid $time_stamp $cache_dir
+growisofs -dry-run $session_param $cdrom_dev -R -J -volid $time_stamp -path-list $files_list
 if [ ! 0 -eq $? ]
 then
   echo "Ошибка выполнения команды тестирования:"
-  echo "growisofs $session_param $cdrom_dev -R -J -joliet-long -volid $time_stamp $cache_dir"
-  echo "Может быть на диске нет свободного места для записи $all_summ_files $postfix?"
+  echo "growisofs $session_param $cdrom_dev -R -J -volid $time_stamp -path-list $files_list"
+  echo "Может быть на диске нет свободного места для записи $all_summ_files $postfix_all_summ_files?"
   exit 1
 else
   echo "успешно прошли тестирование записи данных на диск. Приступаем к реальной записи:"
@@ -170,11 +158,11 @@ fi
 echo "ждём 10 секунд - ещё можно всё отменить..."
 sleep 10
 
-growisofs $session_param $cdrom_dev -R -J -joliet-long -volid $time_stamp $cache_dir
+growisofs $session_param $cdrom_dev -R -J -volid $time_stamp -path-list $files_list
 if [ ! 0 -eq $? ]
 then
   echo "Ошибка выполнения команды записи:"
-  echo "growisofs $session_param $cdrom_dev -R -J -joliet-long -volid $time_stamp $cache_dir"
+  echo "growisofs $session_param $cdrom_dev -R -J -volid $time_stamp -path-list $files_list"
   exit 1
 else
   echo "успешно записали данные на диск"
