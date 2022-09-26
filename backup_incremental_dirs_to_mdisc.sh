@@ -24,16 +24,22 @@ do
   if [ ! -f $stat_file ]
   then
     echo "отстутствует стат-файл прошлой сессии ($stat_file) - бэкаплю все файлы"
-    newer_options=""
+    find_options="-type f -a -not -name 'backup_last_cd_snaphot.stat'"
   else
-    newer_options="-newer $stat_file"
+    # cnewer - новее по полю changed (изменён) в stat, newer - по полю modufy (модифицирован):
+    # Пример:
+    # скачали файл с интернета в архиве (книжку), распаковали и получаем, что modify (изменено содержимое файла) было в лохматом году (когда паковали этот файл в архив в интернете),
+    # а changed - время, когда распаковал сам только что из архива. 
+    # если же изменить содержимое файла - то поменяется и modify.
+    # чтобы отслеживать и то и другое время - используется обе опции (-cnewer и -newer):
+    find_options="-type f -cnewer $stat_file -a -not -name 'backup_last_cd_snaphot.stat' -o -type f -newer $stat_file -a -not -name 'backup_last_cd_snaphot.stat'"
     echo "Формируем список новых файлов, новее отпечатка времени: `stat --printf='%y' $stat_file` (взято из даты изменения файла '$stat_file')"
     echo "Заметка: Если этот файл удалить, то бэкап будет содержать все файлы из этой директории"
   fi
   #=========== Формируем список на бэкапные файлы:
   # сначала находим файлы исключений:
   find "${dir_to_backup}" -type f -name '.exclude.backup' > $exclude_files
-  find "${dir_to_backup}" -type f $newer_options -a -not -name 'backup_last_cd_snaphot.stat' > $tmp_files_list
+  find "${dir_to_backup}" $find_options > $tmp_files_list
   # исключаем директории, содержащие файл .exclude.backup:
   all_num_files=`cat $tmp_files_list|wc -l`
   while read exclude_file_path
