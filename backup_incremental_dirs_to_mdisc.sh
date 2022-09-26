@@ -60,6 +60,11 @@ do
      echo "найдено файлов: $all_num_files - все добавлены в бэкап"
   fi
 
+  echo
+  echo "Список первых пяти файлов на бэкап для '$dir_to_backup':"
+  head -n 5 $tmp_files_list
+  echo
+
 	echo "считаем размер файлов в директории '$dir_to_backup' для бэкапа..."
 	summ_size=0
 	while read file_item
@@ -104,7 +109,7 @@ then
 fi
 
 echo
-echo "Список первых пяти файлов:"
+echo "Список первых пяти файлов общего списка на бэкап (всех директорий):"
 head -n 5 $files_list
 echo
 
