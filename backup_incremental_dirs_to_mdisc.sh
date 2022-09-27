@@ -188,7 +188,7 @@ growisofs -dry-run $session_param $cdrom_dev -R -J -joliet-long -volid $time_sta
 if [ ! 0 -eq $? ]
 then
   echo "Ошибка выполнения команды тестирования:"
-  echo "growisofs $session_param $cdrom_dev -R -J -joliet-long -volid $time_stamp $cache_dir"
+  echo "growisofs -dry-run $session_param $cdrom_dev -R -J -joliet-long -volid $time_stamp $cache_dir"
   echo "Может быть на диске нет свободного места для записи $all_summ_files $postfix_all_summ_files?"
   exit 1
 else
