@@ -1,7 +1,16 @@
 #!/bin/bash
 #
 # список директорий для бэкапа:
-dir_list="/home/progserega/backup_dirs_to_cdrom.list"
+
+if [ -z "$1" ]
+then
+  dir_list="/home/progserega/backup_dirs_to_cdrom.list"
+else
+  dir_list="$1"
+fi
+
+echo "Скрипт может принимать один параметр - список директорий для бэкапа. Если параметр не передан, то используется стандартный путь к файлу."
+echo "Выбранный путь: $dir_list"
 
 growisofs_params="-R -J -joliet-long"
 cdrom_dev="/dev/sr0"
