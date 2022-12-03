@@ -12,8 +12,8 @@ fi
 echo "Скрипт может принимать один параметр - список директорий для бэкапа. Если параметр не передан, то используется стандартный путь к файлу."
 echo "Выбранный путь: $dir_list"
 
-#growisofs_params="-R -J -joliet-long"
-growisofs_params="-J -joliet-long"
+growisofs_params="-R -J -joliet-long"
+#growisofs_params="-J -joliet-long"
 cdrom_dev="/dev/sr0"
 cache_dir="/mnt/media/tmp/cd_console_burn_cache"
 files_list="/home/progserega/backup_last_cd_snaphot.files"
