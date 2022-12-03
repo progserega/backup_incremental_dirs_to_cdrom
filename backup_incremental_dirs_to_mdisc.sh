@@ -12,7 +12,8 @@ fi
 echo "Скрипт может принимать один параметр - список директорий для бэкапа. Если параметр не передан, то используется стандартный путь к файлу."
 echo "Выбранный путь: $dir_list"
 
-growisofs_params="-R -J -joliet-long"
+#growisofs_params="-R -J -joliet-long"
+growisofs_params="-J -joliet-long"
 cdrom_dev="/dev/sr0"
 cache_dir="/mnt/media/tmp/cd_console_burn_cache"
 files_list="/home/progserega/backup_last_cd_snaphot.files"
@@ -31,7 +32,7 @@ while read dir_to_backup
 do
   echo "Ищу новые файлы в ${dir_to_backup}..."
   stat_file="${dir_to_backup}/backup_last_cd_snaphot.stat"
-  if [ ! -f $stat_file ]
+  if [ ! -f "$stat_file" ]
   then
     echo "отстутствует стат-файл прошлой сессии ($stat_file) - бэкаплю все файлы"
     find_options="-type f -a -not -name 'backup_last_cd_snaphot.stat'"
@@ -42,8 +43,8 @@ do
     # а changed - время, когда распаковал сам только что из архива. 
     # если же изменить содержимое файла - то поменяется и modify.
     # чтобы отслеживать и то и другое время - используется обе опции (-cnewer и -newer):
-    find_options="-type f -cnewer $stat_file -a -not -name 'backup_last_cd_snaphot.stat' -o -type f -newer $stat_file -a -not -name 'backup_last_cd_snaphot.stat'"
-    echo "Формируем список новых файлов, новее отпечатка времени: `stat --printf='%y' $stat_file` (взято из даты изменения файла '$stat_file')"
+    find_options="-type f -cnewer \"$stat_file\" -a -not -name 'backup_last_cd_snaphot.stat' -o -type f -newer \"$stat_file\" -a -not -name 'backup_last_cd_snaphot.stat'"
+    echo "Формируем список новых файлов, новее отпечатка времени: `stat --printf='%y' \"$stat_file\"` (взято из даты изменения файла '$stat_file')"
     echo "Заметка: Если этот файл удалить, то бэкап будет содержать все файлы из этой директории"
   fi
   #=========== Формируем список на бэкапные файлы:
