@@ -226,9 +226,11 @@ then
 fi
 
 echo "На udf-образе свободно: $free_summ $postfix_free_summ."
-if [ $size_to_write -gt $free_space ]
+# берём с запасом в 1 Мб:
+size_to_write_zapas=`expr $size_to_write + 1048576`
+if [ $size_to_write_zapas -gt $free_space ]
 then
-  echo "Не достаёт свободного места на образе - пока его записывать и делать новый образ: $size_to_write > $free_space"
+  echo "Не достаёт свободного места на образе - пока его записывать и делать новый образ: $size_to_write_zapas > $free_space"
   echo "Отмонтируем образ:"
   sudo umount "${mount_point}"
   echo "Запустите утилиту backup_incremental_write_udf.sh"
