@@ -45,17 +45,19 @@ then
     truncate -s 4706074624 "${udfimage}"
     mkudffs --media-type=dvdrw -l $time_stamp "${udfimage}"
   elif [ 50 -eq $udftype ]
+  then
     # FIXME уточнить точный размер для 50 Гб BD-R:
     truncate -s 50050629632 "${udfimage}"
     mkudffs --media-type=bdr -l $time_stamp "${udfimage}"
   elif [ 100 -eq $udftype ]
+  then
     # FIXME уточнить точный размер для 100 Гб BD-R:
     truncate -s 100101259264 "${udfimage}"
     mkudffs --media-type=bdr -l $time_stamp "${udfimage}"
   else
     # по-умолчанию - 25 Гб BD-R:
     truncate -s 25025314816 "${udfimage}"
-    mkudffs --media-type=bdr -l $time_stamp "${udfimage}"
+    mkudffs --media-type=dvdrw -l $time_stamp "${udfimage}"
   fi
 fi
 
@@ -63,6 +65,8 @@ if [ ! 0 -eq $? ]
 then
   echo "сбой создания образа '${udfimage}' размером $udftype Гб - выход!"
   exit 1
+else
+  echo "успешно создал образ '${udfimage}' размером $udftype Гб"
 fi
 
 if [ ! -d "${mount_point}" ]
