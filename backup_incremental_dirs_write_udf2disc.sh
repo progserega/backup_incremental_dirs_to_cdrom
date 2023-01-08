@@ -58,4 +58,33 @@ sudo umount "${mount_point}"
 echo
 echo "Всё готово для записи образа на диск. Нажмите любую кнопку для записи образа на диск"
 read key
-growisofs $write_params -Z -V $time_stamp /dev/sr0=${udfimage}
+#growisofs $write_params -V $time_stamp -Z /dev/sr0=${udfimage}
+growisofs $write_params -Z /dev/sr0=${udfimage} -V $time_stamp
+
+if [ ! 0 -eq $? ]
+then
+  echo "Ошибка записи образа '${udfimage}' - выход!"
+  exit 1
+fi
+
+echo
+echo "Т.к. Вы можете хотеть продублировать этот набор копируемых файлов на иные болванки, то
+Вам предоставляется выбор - удалить или нет образ диска.
+В случае удаления - повторный запуск скрипта backup_incremental_dirs_to_udf.sh - создаст пустой образ udf.
+
+Итак, удаляем образ диска '${udfimage}'?
+Если не хотите удалять - нажмите 'n' или ctrl+c"
+read key
+if [ "n" == "$key" ]
+then
+  echo "Вышли без удаления образа диска"
+  exit 0
+fi
+rm -f "${udfimage}"
+if [ ! 0 -eq $? ]
+then
+  echo "сбой удаления образа диска '${udfimage}' - выход!"
+  exit 1
+fi
+echo "Успешное завершение скрипта"
+exit 0
