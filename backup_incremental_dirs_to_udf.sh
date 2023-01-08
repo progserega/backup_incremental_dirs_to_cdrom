@@ -232,6 +232,11 @@ then
   echo "Отмонтируем образ:"
   sudo umount "${mount_point}"
   echo "Запустите утилиту backup_incremental_write_udf.sh"
+  if [ ! 0 -eq $? ]
+  then
+    echo "сбой отмонтирования '${mount_point}' - выход!"
+    exit 1
+  fi
   exit 0
 fi
 echo "Продолжаем? (нажмите любую клавишу)..."
@@ -258,8 +263,8 @@ done < $files_list
 echo "подсчитываем контрольные суммы"
 cur_dir="`pwd`"
 cd "${mount_point}"
-find . -type f -exec md5sum {} \; > /tmp/cdrecord_console.md5
-mv /tmp/cdrecord_console.md5 "${mount_point}/${time_stamp}.md5"
+find . -type f -exec md5sum {} \;|grep -v ' ./md5sum.txt' > /tmp/cdrecord_console.md5
+mv /tmp/cdrecord_console.md5 "${mount_point}/md5sum.txt"
 
 
 echo "Данные скопированы в образ, но образ ещё не отмонтирован из точки монтирования '${mount_point}'"
@@ -270,6 +275,11 @@ read key
 cd "${cur_dir}"
 echo "Отмонтируем образ:"
 sudo umount "${mount_point}"
+if [ ! 0 -eq $? ]
+then
+  echo "сбой отмонтирования '${mount_point}' - выход!"
+  exit 1
+fi
 
 echo
 echo "Т.к. Вы можете хотеть продублировать этот набор копируемых файлов на иные болванки, то
