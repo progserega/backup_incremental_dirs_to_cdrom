@@ -10,13 +10,16 @@ else
 fi
 
 # bdr dvdrw (man mkudffs)
-udftype="dvdrw"
-if [ ! -z "$2" ]
+udftype=25
+if [ ! -z $2 ]
 then
-  udftype="$2"
+  udftype=$2
 fi
 
-echo "Скрипт может принимать два параметра - список директорий для бэкапа и тип образа (dvdrw/bdr - по-умолчанию bdr). Если параметры не переданы, то используется стандартный путь к файлу директорий для бэкапа и тип диска - bdr."
+echo "Скрипт может принимать два параметра - список директорий для бэкапа и размер образа образа (4,25,50,100 - по-умолчанию 25 - в Гб). Если параметры не переданы, то используется стандартный путь к файлу директорий для бэкапа и тип диска - bdr,25Гб."
+echo "Пример (образ BD-r, 25Гб):"
+echo "$0 /home/progserega/backup_dirs_to_cdrom.list 25"
+echo
 echo "Выбранный путь: $dir_list"
 
 #growisofs_params="-R -J -joliet-long"
@@ -32,20 +35,34 @@ mount_point="${work_dir}/mount_point"
 image_file="udfimage.udf"
 udfimage="${work_dir}/${image_file}"
 
-time_stamp="`date +%Y%m%d%H%M.%S`"
+time_stamp="`date +%Y.%m.%d-%H:%M:%S`"
 
 if [ ! -f "${udfimage}" ]
 then
   echo "Создаём отсутствующий образ $udfimage"
-  truncate -s $bdr_size "${udfimage}"
-  if [ "dvdrw" == $udftype ]
+  if [ 4 -eq $udftype ]
   then
     truncate -s 4706074624 "${udfimage}"
-    mkudffs --media-type=dvdrw "${udfimage}"
+    mkudffs --media-type=dvdrw -l $time_stamp "${udfimage}"
+  elif [ 50 -eq $udftype ]
+    # FIXME уточнить точный размер для 50 Гб BD-R:
+    truncate -s 50050629632 "${udfimage}"
+    mkudffs --media-type=bdr -l $time_stamp "${udfimage}"
+  elif [ 100 -eq $udftype ]
+    # FIXME уточнить точный размер для 100 Гб BD-R:
+    truncate -s 100101259264 "${udfimage}"
+    mkudffs --media-type=bdr -l $time_stamp "${udfimage}"
   else
-    truncate -s 4706074624 "${udfimage}"
-    mkudffs --media-type=bdr "${udfimage}"
+    # по-умолчанию - 25 Гб BD-R:
+    truncate -s 25025314816 "${udfimage}"
+    mkudffs --media-type=bdr -l $time_stamp "${udfimage}"
   fi
+fi
+
+if [ ! 0 -eq $? ]
+then
+  echo "сбой создания образа '${udfimage}' размером $udftype Гб - выход!"
+  exit 1
 fi
 
 if [ ! -d "${mount_point}" ]
