@@ -266,6 +266,9 @@ cd "${mount_point}"
 find . -type f -exec md5sum {} \;|grep -v ' ./md5sum.txt' > /tmp/cdrecord_console.md5
 mv /tmp/cdrecord_console.md5 "${mount_point}/md5sum.txt"
 
+echo "======= `date +%Y.%m.%d %H:%M:%S` =======" >> "${mount_point}/sessions.list"
+cat "${files_list}" >> "${mount_point}/sessions.list"
+
 
 echo "Данные скопированы в образ, но образ ещё не отмонтирован из точки монтирования '${mount_point}'"
 echo "Вы можете проверить данные в данном образе ('$udfimage'), проверив их в точке монтирования '$mount_point'"
