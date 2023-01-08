@@ -59,7 +59,7 @@ echo
 echo "Всё готово для записи образа на диск. Нажмите любую кнопку для записи образа на диск"
 read key
 #growisofs $write_params -V $time_stamp -Z /dev/sr0=${udfimage}
-growisofs $write_params -Z /dev/sr0=${udfimage} -V $time_stamp
+growisofs $write_params -Z /dev/sr0=${udfimage}
 
 if [ ! 0 -eq $? ]
 then
@@ -85,6 +85,9 @@ if [ ! 0 -eq $? ]
 then
   echo "сбой удаления образа диска '${udfimage}' - выход!"
   exit 1
+else
+  echo "успешно удалил образ диска '${udfimage}'"
 fi
+
 echo "Успешное завершение скрипта"
 exit 0
