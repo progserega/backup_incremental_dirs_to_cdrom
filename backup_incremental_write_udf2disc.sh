@@ -59,7 +59,8 @@ echo
 echo "Всё готово для записи образа на диск. Нажмите любую кнопку для записи образа на диск"
 read key
 #growisofs $write_params -V $time_stamp -Z /dev/sr0=${udfimage}
-growisofs $write_params -Z /dev/sr0=${udfimage}
+#growisofs $write_params -Z /dev/sr0=${udfimage}
+cdrskin -v dev=/dev/sr0 speed=12 blank=as_needed -eject fs=128m ${udfimage}
 
 if [ ! 0 -eq $? ]
 then
