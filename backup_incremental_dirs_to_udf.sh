@@ -139,7 +139,7 @@ do
     echo "Нашли файл исключения директории: '$exclude_file_path'"
     exclude_dir_path="`echo $exclude_file_path|sed 's/\(.*\)\/.*$/\1/'`"
     echo "пропускаем все дочерние объекты в '$exclude_dir_path'"
-    cat $tmp_files_list|egrep -v "^${exclude_dir_path}.*$" > "${tmp_files_list}.tmp"
+    cat $tmp_files_list|egrep -v "^${exclude_dir_path}.*$"| egrep -v '.*\/\.stversions(\/.*|$)' | egrep -v '.*\/\.stfolder(\/.*|$)' > "${tmp_files_list}.tmp"
     mv "${tmp_files_list}.tmp" "${tmp_files_list}"
   done < $exclude_files
   # добавляем готовый список файлов (за исключением директорий и их дочерних объектов 
@@ -251,7 +251,7 @@ echo "На udf-образе свободно: $free_summ $postfix_free_summ."
 size_to_write_zapas=`expr $size_to_write + 1048576`
 if [ $size_to_write_zapas -gt $free_space ]
 then
-  echo "Не достаёт свободного места на образе - пока его записывать и делать новый образ: $size_to_write_zapas > $free_space"
+  echo "Не достаёт свободного места на образе - пора его записывать и делать новый образ: $size_to_write_zapas > $free_space"
   echo "Отмонтируем образ:"
   sudo umount "${mount_point}"
   echo "Запустите утилиту backup_incremental_write_udf.sh"
