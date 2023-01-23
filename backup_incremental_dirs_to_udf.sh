@@ -36,6 +36,7 @@ image_file="udfimage.udf"
 udfimage="${work_dir}/${image_file}"
 
 time_stamp="`date +%Y.%m.%d-%H:%M:%S`"
+time_stamp_touch="`date +%Y%m%d%H%M.%S`"
 
 if [ ! -f "${udfimage}" ]
 then
@@ -329,7 +330,7 @@ do
   stat_file="${dir_to_backup}/backup_last_cd_snaphot.stat"
   echo "обновляем статус бэкапа посредством времени модификации статусного файла (при последующем запуске будут записываться данные новее этого отпечатка): $stat_file"
   echo $time_stamp > "$stat_file"
-  touch -t $time_stamp "$stat_file"
+  touch -t $time_stamp_touch "$stat_file"
 done < "${dir_list}"
 
 echo "Успешное завершение скрипта"
