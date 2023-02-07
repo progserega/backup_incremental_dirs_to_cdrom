@@ -132,7 +132,7 @@ do
   # сначала находим файлы исключений:
   find "${dir_to_backup}" -type f -name '.exclude.backup' > $exclude_files
   #echo "команда поиска: 'find \"${dir_to_backup}\" $find_options > $tmp_files_list'"
-  find "${dir_to_backup}" $find_options | grep -v 'backup_last_cd_snaphot.stat' > $tmp_files_list
+  find "${dir_to_backup}" $find_options | grep -a -v 'backup_last_cd_snaphot.stat' > $tmp_files_list
   # исключаем директории, содержащие файл .exclude.backup:
   all_num_files=`cat $tmp_files_list|wc -l`
   while read exclude_file_path
@@ -140,7 +140,7 @@ do
     echo "Нашли файл исключения директории: '$exclude_file_path'"
     exclude_dir_path="`echo $exclude_file_path|sed 's/\(.*\)\/.*$/\1/'`"
     echo "пропускаем все дочерние объекты в '$exclude_dir_path'"
-    cat $tmp_files_list|egrep -v "^${exclude_dir_path}.*$"| egrep -v '.*\/\.stversions(\/.*|$)' | egrep -v '.*\/\.stfolder(\/.*|$)' > "${tmp_files_list}.tmp"
+    cat $tmp_files_list|egrep -a -v "^${exclude_dir_path}.*$"| egrep -a -v '.*\/\.stversions(\/.*|$)' | egrep -a -v '.*\/\.stfolder(\/.*|$)' > "${tmp_files_list}.tmp"
     mv "${tmp_files_list}.tmp" "${tmp_files_list}"
   done < $exclude_files
   # добавляем готовый список файлов (за исключением директорий и их дочерних объектов 
