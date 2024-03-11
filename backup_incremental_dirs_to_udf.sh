@@ -276,7 +276,7 @@ do
   result_dir_path="${mount_point}/${dir_path}"
   mkdir -p "$result_dir_path"
   # копируем файл в этот каталог:
-  cp -a "${file_item}" "${result_dir_path}/" 
+  cp -af "${file_item}" "${result_dir_path}/"
   if [ ! 0 -eq $? ]
   then
     echo "сбой копирования '${file_item}' в '${result_dir_path}' - выход!"
